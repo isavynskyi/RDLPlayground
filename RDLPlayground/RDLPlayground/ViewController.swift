@@ -7,6 +7,11 @@
 
 import UIKit
 
+public protocol CollectionInteractable {
+    func addNewItem()
+    func deleteItem(at index: Int)
+}
+
 class ViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
@@ -24,17 +29,8 @@ class ViewController: UIViewController {
     
     }
 
-    @IBAction func addEntrry(_ sender: Any) {
-        counter += 1
-        let ip = lastIP
-        
-        collectionView.performBatchUpdates {
-            collectionView.insertItems(at: [ip])
-        } completion: { _ in
-            self.collectionView.scrollToItem(at: ip,
-                                        at: .right,
-                                        animated: true)
-        }
+    @IBAction func addEntry(_ sender: Any) {
+        addNewItem()
     }
     
     private func deleteCell(_ cell: UICollectionViewCell) {
@@ -89,7 +85,7 @@ private extension ViewController {
             if abs(yTranslation) > threashold {
                 deleteCell(currentlyDraggedCell)
             } else {
-                currentlyDraggedCell.transform = CGAffineTransform.identity
+                currentlyDraggedCell.transform = .identity
             }
             self.currentlyDraggedCell = nil
         case .possible:
@@ -115,5 +111,30 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         deleteItem(at: indexPath)
+    }
+}
+
+extension ViewController: CollectionInteractable {
+    func addNewItem() {
+        DispatchQueue.main.async {
+            self.counter += 1
+            let ip = self.lastIP
+            
+            self.collectionView.performBatchUpdates {
+                self.collectionView.insertItems(at: [ip])
+            } completion: { _ in
+                self.collectionView.scrollToItem(at: ip,
+                                            at: .right,
+                                            animated: true)
+            }
+        }
+    }
+    
+    func deleteItem(at index: Int) {
+        DispatchQueue.main.async {
+            guard index <= self.counter else { return }
+            let ip = IndexPath(item: index, section: 0)
+            self.deleteItem(at: ip)
+        }
     }
 }
