@@ -34,6 +34,13 @@ class ViewController: UIViewController {
         }
     }
     
+    private func deleteItem(at indexPath: IndexPath) {
+        counter -= 1
+        
+        collectionView.performBatchUpdates {
+            collectionView.deleteItems(at: [indexPath])
+        }
+    }
 }
 
 private extension ViewController {
@@ -46,8 +53,6 @@ private extension ViewController {
         layout.itemSize = CGSize(width: 100, height: 100)
         collectionView.collectionViewLayout = layout
     }
-    
-    
 }
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -63,5 +68,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         return cell
     }
     
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        deleteItem(at: indexPath)
+    }
 }
