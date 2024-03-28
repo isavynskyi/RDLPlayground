@@ -41,12 +41,22 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dSP-FY-udk">
+                                <rect key="frame" x="153" y="605" width="75" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Add"/>
+                                <connections>
+                                    <action selector="addEntrry:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cQm-BP-8PE"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="RXv-jL-us1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="1bO-hO-8EX"/>
                             <constraint firstItem="RXv-jL-us1" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="3Hr-Fv-h8P"/>
+                            <constraint firstItem="dSP-FY-udk" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Y6a-SR-Ioh"/>
+                            <constraint firstItem="dSP-FY-udk" firstAttribute="top" secondItem="RXv-jL-us1" secondAttribute="bottom" constant="64" id="jqg-Y6-70K"/>
                             <constraint firstAttribute="trailing" secondItem="RXv-jL-us1" secondAttribute="trailing" id="uA0-9a-1wm"/>
                         </constraints>
                     </view>
