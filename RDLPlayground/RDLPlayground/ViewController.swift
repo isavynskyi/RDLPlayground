@@ -26,7 +26,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
-    
     }
 
     @IBAction func addEntry(_ sender: Any) {
@@ -137,4 +136,11 @@ extension ViewController: CollectionInteractable {
             self.deleteItem(at: ip)
         }
     }
+}
+
+
+#Preview {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let vc = storyboard.instantiateViewController(withIdentifier: "ViewControllerID")
+    return vc
 }
