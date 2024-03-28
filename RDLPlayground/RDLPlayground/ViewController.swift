@@ -11,6 +11,8 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     private var counter = 0
+    private lazy var gestureRecognizer = UIPanGestureRecognizer()
+    private var currentlyDraggedCell: UICollectionViewCell?
     
     var lastIP: IndexPath {
         IndexPath(item: counter - 1, section: 0)
@@ -19,6 +21,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+    
     }
 
     @IBAction func addEntrry(_ sender: Any) {
@@ -32,6 +35,11 @@ class ViewController: UIViewController {
                                         at: .right,
                                         animated: true)
         }
+    }
+    
+    private func deleteCell(_ cell: UICollectionViewCell) {
+        guard let ip = collectionView.indexPath(for: cell) else { return }
+        deleteItem(at: ip)
     }
     
     private func deleteItem(at indexPath: IndexPath) {
@@ -52,6 +60,43 @@ private extension ViewController {
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 100, height: 100)
         collectionView.collectionViewLayout = layout
+        
+        gestureRecognizer.addTarget(self, action: #selector(handlePanGesture))
+        collectionView.addGestureRecognizer(gestureRecognizer)
+    }
+    
+    @objc
+    func handlePanGesture(_ sender: UIPanGestureRecognizer) {
+        switch sender.state {
+            
+        case .began:
+            let touchLocation = sender.location(in: collectionView)
+            if let ip = collectionView.indexPathForItem(at: touchLocation),
+               let cell = collectionView.cellForItem(at: ip) {
+                currentlyDraggedCell = cell
+            } else {
+                currentlyDraggedCell = nil
+            }
+        case .changed:
+            guard let currentlyDraggedCell else { return }
+            let yTranslation = sender.translation(in: collectionView).y
+            currentlyDraggedCell.transform = CGAffineTransform(translationX: 0, y: yTranslation)
+        case .ended, .cancelled, .failed:
+            guard let currentlyDraggedCell else { return }
+            let yTranslation = sender.translation(in: collectionView).y
+            
+            let threashold = 50 + (collectionView.frame.height - currentlyDraggedCell.frame.height)/2
+            if abs(yTranslation) > threashold {
+                deleteCell(currentlyDraggedCell)
+            } else {
+                currentlyDraggedCell.transform = CGAffineTransform.identity
+            }
+            self.currentlyDraggedCell = nil
+        case .possible:
+            break // reset
+        @unknown default:
+            break // reset
+        }
     }
 }
 
